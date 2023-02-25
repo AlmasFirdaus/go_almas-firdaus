@@ -19,7 +19,6 @@ func ArrayMerge(arrayA, arrayB []string) []string{
 		}
 	}
 
-
 	return arrayGroup
 }
 
