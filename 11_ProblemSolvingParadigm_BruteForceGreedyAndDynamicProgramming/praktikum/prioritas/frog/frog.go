@@ -44,7 +44,6 @@ func frog(stones []int) int {
 		} else {
 			return sum(step_even)
 		}
-		fmt.Println("yes")
 	} else {
 		if sum(step_odd) < sum(step_even) {
 			return sum(step_odd)
