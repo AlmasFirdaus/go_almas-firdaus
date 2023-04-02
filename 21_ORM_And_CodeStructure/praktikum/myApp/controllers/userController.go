@@ -1,0 +1,95 @@
+package controllers
+
+import (
+	"myApp/lib/database"
+	"myApp/models"
+	"net/http"
+	"strconv"
+
+	"github.com/labstack/echo/v4"
+)
+
+// get all users
+func GetUsersController(c echo.Context) error {
+	users, e := database.GetUsers()
+
+	if e != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, e.Error())
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success get all users",
+		"users":   users,
+	})
+}
+
+func GetUserController(c echo.Context) error {
+	id, _ := strconv.Atoi(c.Param("id"))
+	users, e := database.GetUser(id)
+
+	if e != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, e.Error())
+	}
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success get user",
+		"users":   users,
+	})
+}
+
+// create new user
+func CreateUserController(c echo.Context) error {
+	user := models.User{
+		Name:     c.FormValue("name"),
+		Email:    c.FormValue("email"),
+		Password: c.FormValue("password"),
+	}
+	newUser, e := database.CreateUser(user)
+	c.Bind(&user)
+
+	if e != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, e.Error())
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success create new user",
+		"users":   newUser,
+	})
+}
+
+// update user by id
+func UpdateUserController(c echo.Context) error {
+	// your solution here
+	id, _ := strconv.Atoi(c.Param("id"))
+	user := models.User{
+		Id:       id,
+		Name:     c.FormValue("name"),
+		Email:    c.FormValue("email"),
+		Password: c.FormValue("password"),
+	}
+	UpdateUser, e := database.UpdateUser(user)
+
+	if e != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, e.Error())
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success update data user",
+		"users":   UpdateUser,
+	})
+}
+
+// delete user by id
+func DeleteUserController(c echo.Context) error {
+	// your solution here
+	id, _ := strconv.Atoi(c.Param("id"))
+	deleteUser, e := database.DeleteUser(id)
+
+	if e != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, e.Error())
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"message": "success delete data user",
+		"users":   deleteUser,
+	})
+
+}
